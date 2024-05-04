@@ -1,0 +1,149 @@
+public class BST {
+
+    class TreeNode<T> {
+
+        String word;
+        int frequency;
+        LinkedList<String> files; // Linked list to store file names
+        TreeNode left, right;
+
+        public TreeNode(String word) {
+            this.word = word;
+            this.frequency = 1;
+            left = right = null;
+            files = new LinkedList<>();
+        }
+
+        public TreeNode(String word, String file) {
+            this.word = word;
+            this.frequency = 1;
+            files = new LinkedList<>();
+            files.add(file);
+            left = right = null;
+        }
+    }
+
+    private TreeNode root;
+
+    public BST() {
+        this.root = null;
+    }
+
+
+    public void insert(String word, String file) {
+        root = insertRecursive(root, word, file);
+    }
+
+    private TreeNode insertRecursive(TreeNode root, String word, String file) {
+        if (root == null) {
+            return new TreeNode(word, file);
+        }
+
+        int compare = word.compareTo(root.word);
+        if (compare < 0) {
+            root.left = insertRecursive(root.left, word);
+        } else if (compare > 0) {
+            root.right = insertRecursive(root.right, word);
+        } else {
+            root.frequency++;
+        }
+
+        return root;
+    }
+
+    public void insert(String word) {
+        root = insertRecursive(root, word);
+    }
+
+    private TreeNode insertRecursive(TreeNode root, String word) {
+        if (root == null) {
+            return new TreeNode(word);
+        }
+
+        int compare = word.compareTo(root.word);
+        if (compare < 0) {
+            root.left = insertRecursive(root.left, word);
+        } else if (compare > 0) {
+            root.right = insertRecursive(root.right, word);
+        } else {
+            root.frequency++;
+        }
+        return root;
+    }
+
+    public void preorder() {
+        preorderRecursive(root);
+    }
+
+    private void preorderRecursive(TreeNode root) {
+        if (root != null) {
+            System.out.print(root.word + "," + root.frequency + " -> ");
+            preorderRecursive(root.left);
+            preorderRecursive(root.right);
+        }
+    }
+
+    public void inorder() {
+        inorderRecursive(root);
+    }
+
+    private void inorderRecursive(TreeNode root) {
+        if (root != null) {
+            inorderRecursive(root.left);
+            System.out.print(root.word + "," + root.frequency + " -> ");
+            inorderRecursive(root.right);
+        }
+    }
+
+    public void postorder() {
+        postorderRecursive(root);
+    }
+
+    private void postorderRecursive(TreeNode root) {
+        if (root != null) {
+            postorderRecursive(root.left);
+            postorderRecursive(root.right);
+            System.out.print(root.word + "," + root.frequency + " -> ");
+        }
+    }
+
+    public void preorder(javax.swing.JTextArea resultTextArea) {
+        preorderRecursive(root, resultTextArea);
+        resultTextArea.append("\n");
+    }
+
+    private void preorderRecursive(TreeNode root, javax.swing.JTextArea resultTextArea) {
+        if (root != null) {
+            resultTextArea.append(root.word + "," + root.frequency + "\n");
+            preorderRecursive(root.left, resultTextArea);
+            preorderRecursive(root.right, resultTextArea);
+        }
+    }
+
+    public void inorder(javax.swing.JTextArea resultTextArea) {
+        inorderRecursive(root, resultTextArea);
+        resultTextArea.append("\n");
+    }
+
+    private void inorderRecursive(TreeNode root, javax.swing.JTextArea resultTextArea) {
+        if (root != null) {
+            inorderRecursive(root.left, resultTextArea);
+            resultTextArea.append(root.word + "," + root.frequency + "\n");
+            inorderRecursive(root.right, resultTextArea);
+        }
+    }
+
+    public void postorder(javax.swing.JTextArea resultTextArea) {
+        postorderRecursive(root, resultTextArea);
+        resultTextArea.append("\n");
+    }
+
+    private void postorderRecursive(TreeNode root, javax.swing.JTextArea resultTextArea) {
+        if (root != null) {
+            postorderRecursive(root.left, resultTextArea);
+            postorderRecursive(root.right, resultTextArea);
+            resultTextArea.append(root.word + "," + root.frequency + "\n");
+        }
+    }
+
+}
