@@ -1,0 +1,39 @@
+    public void addToTree(String word, File file) {
+        root = addToTreeRecursive(root, word.toLowerCase(), file);
+    }
+
+    private TreeNode addToTreeRecursive(TreeNode root, String word, File file) {
+        if (root == null) {
+            TreeNode newNode = new TreeNode(word, file);
+            return newNode;
+        }
+
+        int compare = word.compareTo(root.word);
+        if (compare < 0) {
+            root.left = addToTreeRecursive(root.left, word, file);
+        } else if (compare > 0) {
+            root.right = addToTreeRecursive(root.right, word, file);
+        } else {
+            root.frequency++;
+            // Check if the file name already exists in the linked list
+            if (!containsFile(root.files, file.getName())) {
+                // Add the file name to the linked list
+                LinkedList.ListNode<String> newNode = new LinkedList.ListNode<>(file.getName());
+                newNode.next = root.files;
+                root.files = newNode;
+            }
+        }
+        return root;
+    }
+
+    // Utility method to check if a file name exists in the linked list
+    private boolean containsFile(LinkedList.ListNode<String> node, String fileName) {
+        while (node != null) {
+            if (node.data.equals(fileName)) {
+                return true;
+            }
+            node = node.next;
+        }
+        return false;
+    }
+    ///////////////
