@@ -1,0 +1,173 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.asmaomarahmedalrefaei;
+
+import com.mycompany.asmaomarahmedalrefaei.LinkedList.ListNode;
+import java.io.File;
+
+/**
+ *
+ * @author Asmz
+ */
+public class BST {
+
+    class TreeNode<T> {
+
+        String word;
+        int frequency;
+        LinkedList<String> files; // Linked list to store file names
+        TreeNode left, right;
+
+        public TreeNode(String word) {
+            this.word = word;
+            this.frequency = 1;
+            left = right = null;
+            files = new LinkedList<>();
+        }
+
+        public TreeNode(String word, String file) {
+            this.word = word;
+            this.frequency = 1;
+            files = new LinkedList<>();
+            files.add(file);
+            left = right = null;
+        }
+    }
+
+    private TreeNode root;
+
+    public BST() {
+        this.root = null;
+    }
+
+    public void insert(String word, String file) {
+        root = insertRecursive(root, word, file);
+    }
+
+    private TreeNode insertRecursive(TreeNode root, String word, String file) {
+        if (root == null) {
+            return new TreeNode(word, file);
+        }
+
+        int compare = word.compareTo(root.word);
+        if (compare < 0) {
+            root.left = insertRecursive(root.left, word, file);
+        } else if (compare > 0) {
+            root.right = insertRecursive(root.right, word, file);
+        } else {
+            root.frequency++;
+            if (!root.files.contains(file)) {
+                root.files.add(file);
+            }
+        }
+
+        return root;
+    }
+
+    public void insert(String word) {
+        root = insertRecursive(root, word);
+    }
+
+    private TreeNode insertRecursive(TreeNode root, String word) {
+        if (root == null) {
+            return new TreeNode(word);
+        }
+
+        int compare = word.compareTo(root.word);
+        if (compare < 0) {
+            root.left = insertRecursive(root.left, word);
+        } else if (compare > 0) {
+            root.right = insertRecursive(root.right, word);
+        } else {
+            root.frequency++;
+        }
+        return root;
+    }
+
+    // types of printing
+    public void preorder(javax.swing.JTextArea resultTextArea) {
+        preorderRecursive(root, resultTextArea);
+        resultTextArea.append("\n");
+    }
+
+    private void preorderRecursive(TreeNode root, javax.swing.JTextArea resultTextArea) {
+        if (root != null) {
+            resultTextArea.append(root.word + "," + root.frequency + " (" + getFileNames(root.files) + " )" + "\n");
+            preorderRecursive(root.left, resultTextArea);
+            preorderRecursive(root.right, resultTextArea);
+        }
+    }
+
+    public void inorder(javax.swing.JTextArea resultTextArea) {
+        inorderRecursive(root, resultTextArea);
+        resultTextArea.append("\n");
+    }
+
+    private void inorderRecursive(TreeNode root, javax.swing.JTextArea resultTextArea) {
+        if (root != null) {
+            inorderRecursive(root.left, resultTextArea);
+            resultTextArea.append(root.word + "," + root.frequency + " (" + getFileNames(root.files) + " )" + "\n");
+            inorderRecursive(root.right, resultTextArea);
+        }
+    }
+
+    public void postorder(javax.swing.JTextArea resultTextArea) {
+        postorderRecursive(root, resultTextArea);
+        resultTextArea.append("\n");
+    }
+
+    private void postorderRecursive(TreeNode root, javax.swing.JTextArea resultTextArea) {
+        if (root != null) {
+            postorderRecursive(root.left, resultTextArea);
+            postorderRecursive(root.right, resultTextArea);
+            resultTextArea.append(root.word + "," + root.frequency + " (" + getFileNames(root.files) + " )" + "\n");
+        }
+    }
+
+    private String getFileNames(LinkedList<String> files) {
+        StringBuilder names = new StringBuilder();
+        ListNode<String> current = files.head;
+        while (current != null) {
+            names.append(getFileName(current.data)).append(", ");
+            current = current.next;
+        }
+        return names.toString();
+    }
+
+    private String getFileName(String filePath) {
+        File file = new File(filePath);
+        return file.getName();
+    }
+
+    private TreeNode searchWord(TreeNode root, String word) {
+    if (root == null || root.word.equals(word)) {
+        return root;
+    }
+
+    int compare = word.compareTo(root.word);
+    if (compare < 0) {
+        return searchWord(root.left, word);
+    } else {
+        return searchWord(root.right, word);
+    }
+}
+    
+    public void searchAndDisplay(String word, javax.swing.JTextField resultTextField) {
+    TreeNode resultNode = searchWord(root, word);
+    if (resultNode != null) {
+        StringBuilder result = new StringBuilder();
+        result.append(resultNode.word).append(", ").append(resultNode.frequency).append(" (");
+        ListNode<String> current = resultNode.files.head;
+        while (current != null) {
+            result.append(getFileName(current.data)).append(", "); //.append(current.frequencyLL).append(", ")
+            current = current.next;
+        }
+        result.append(")");
+        resultTextField.setText(result.toString());
+    } else {
+        resultTextField.setText("Word not found.");
+    }
+}
+}
